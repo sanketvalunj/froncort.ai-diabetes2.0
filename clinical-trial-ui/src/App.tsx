@@ -13,9 +13,12 @@ function cn(...inputs: (string | undefined | null | false)[]) {
 }
 
 // ─── API base ─────────────────────────────────────────────────────────────────
-// All requests go through the Vite dev-proxy at /api → http://localhost:8000
+// In local dev: Vite proxies /api/* → http://localhost:8000 (see vite.config.ts)
+// In production (Vercel): VITE_API_URL is set to the Render backend URL,
+//   e.g. https://clinical-trial-api.onrender.com
+// The trailing slash is stripped so every fetch path can start with /
 
-const API = '/api'
+const API = (import.meta.env.VITE_API_URL ?? '/api').replace(/\/$/, '')
 
 // ─── Types matching the real backend response shapes ─────────────────────────
 
