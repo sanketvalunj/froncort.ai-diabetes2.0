@@ -17,7 +17,7 @@ Step-by-step instructions for deploying the backend to **Render** and the fronte
 | **Branch** | `main` |
 | **Root Directory** | `clinical-trial-agent` |
 | **Runtime** | `Python 3` |
-| **Build Command** | `pip install -r requirements.txt` |
+| **Build Command** | `pip install -r requirements.txt && python main.py index` |
 | **Start Command** | `uvicorn api_server:app --host 0.0.0.0 --port $PORT` |
 | **Health Check Path** | `/health` |
 | **Instance Type** | Standard (1 GB RAM minimum — sentence-transformers needs it) |
