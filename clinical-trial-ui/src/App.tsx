@@ -429,8 +429,23 @@ function ReportCard({ result }: { result: ScreenResult }) {
     URL.revokeObjectURL(url)
   }
 
-  const handleDownloadPdf = () => {
-    window.open(`${API}/report/${patientId}/pdf`, '_blank')
+  const handleDownloadPdf = async () => {
+    try {
+      const res = await fetch(`${API}/report/${patientId}/pdf`)
+      if (!res.ok) {
+        alert('Could not download PDF report. Run screening first.')
+        return
+      }
+      const blob = await res.blob()
+      const url  = URL.createObjectURL(blob)
+      const a    = document.createElement('a')
+      a.href = url
+      a.download = `${patientId}_report.pdf`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (e) {
+      alert(`PDF download failed: ${e instanceof Error ? e.message : String(e)}`)
+    }
   }
 
   const reviewCount = result.ranked_trials.filter(t => t.requires_human_review).length
@@ -573,7 +588,7 @@ export default function App() {
         setPatients(data)
         if (data.length > 0) setSelectedId(data[0].patient_id)
       })
-      .catch(e => setError(`Could not load patients: ${e}. Is the backend running on port 8000?`))
+      .catch(e => setError(`Could not load patients: ${e}. Please check if the backend API service is running and accessible.`))
       .finally(() => setLoadingPatients(false))
   }, [])
 
