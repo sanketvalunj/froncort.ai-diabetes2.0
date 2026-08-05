@@ -10,7 +10,7 @@ An agentic AI system that evaluates patient eligibility for Type 2 Diabetes clin
 
 - **Agentic LangGraph pipeline** — five-node graph: filter → retrieve → evaluate → rank → report
 - **Rule-based + LLM evaluation** — age, HbA1c, eGFR, and recruiting status evaluated deterministically; medication and condition criteria evaluated by Gemini / Grok
-- **FAISS vector retrieval** — patient evidence and trial text chunked and retrieved via semantic similarity
+- **Lightweight TF-IDF retrieval** — patient evidence and trial text chunked and retrieved via scikit-learn cosine similarity (zero-OOM memory footprint)
 - **Top-3 trial ranking** — scored and ranked by supported criterion count and confidence
 - **Markdown + PDF report generation** — full eligibility report with evidence IDs, reasoning, and unanswered questions
 - **React UI** — real-time workflow animation, expandable trial cards with criterion-level evidence panels, confidence bars, and report download
@@ -24,8 +24,7 @@ An agentic AI system that evaluates patient eligibility for Type 2 Diabetes clin
 |---|---|
 | Pipeline orchestration | LangGraph 0.2+ |
 | LLM inference | Google Gemini 2.0 Flash / xAI Grok 3 Mini (via LangChain) |
-| Embeddings | `sentence-transformers/all-MiniLM-L6-v2` |
-| Vector store | FAISS (CPU) |
+| Text Retrieval / Embeddings | `scikit-learn` (TF-IDF Vectorizer + Cosine Similarity) |
 | Backend API | FastAPI + Uvicorn |
 | Report generation | ReportLab (PDF), custom Markdown renderer |
 | Frontend | React 18 + Vite 5 + TypeScript |
@@ -62,7 +61,7 @@ filter_node  retrieval_node  evaluation_node  ranking_node
 | Node | Responsibility |
 |---|---|
 | `filter_node` | Hard-filter trials by recruiting status and age bounds |
-| `retrieval_node` | Extract patient evidence; retrieve trial evidence via FAISS |
+| `retrieval_node` | Extract patient evidence; retrieve trial evidence via TF-IDF cosine similarity |
 | `evaluation_node` | Rule engine (age/HbA1c/eGFR/recruiting) + LLM evaluator (medication/condition) |
 | `ranking_node` | Score and rank filtered trials; cap at top 3 |
 | `report_node` | Generate Markdown report + PDF artifact; persist to disk |
@@ -235,14 +234,6 @@ See [DEPLOYMENT.md](./DEPLOYMENT.md) for exact step-by-step instructions.
 | Trial Results | Report Download |
 |---|---|
 | ![Top 3 trials with criteria](docs/screenshots/trials.png) | ![Report card](docs/screenshots/report.png) |
-
----
-
-## Evaluation Documents
-
-- [AI_USAGE.md](clinical-trial-agent/AI_USAGE.md) — AI tool usage disclosure
-- [EVALUATION.md](clinical-trial-agent/EVALUATION.md) — Assignment evaluation notes
-- [RESEARCH.md](clinical-trial-agent/RESEARCH.md) — Research and design decisions
 
 ---
 

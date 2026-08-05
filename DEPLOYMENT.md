@@ -20,7 +20,7 @@ Step-by-step instructions for deploying the backend to **Render** and the fronte
 | **Build Command** | `pip install -r requirements.txt && python main.py index` |
 | **Start Command** | `uvicorn api_server:app --host 0.0.0.0 --port $PORT` |
 | **Health Check Path** | `/health` |
-| **Instance Type** | Standard (1 GB RAM minimum — sentence-transformers needs it) |
+| **Instance Type** | Free / Starter (Low RAM footprint — lightweight TF-IDF retrieval fits in 512 MB) |
 
 ### Environment Variables (set in Render dashboard → Environment)
 

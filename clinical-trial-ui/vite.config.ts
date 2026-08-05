@@ -1,3 +1,4 @@
+// Vite configuration for the clinical trial UI application.
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 

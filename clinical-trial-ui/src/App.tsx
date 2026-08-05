@@ -1,3 +1,4 @@
+// Main application component for the clinical trial UI.
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
